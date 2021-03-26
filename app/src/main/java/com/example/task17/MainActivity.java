@@ -62,6 +62,13 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_CATEGORY_NAME, categoryName);
         intent.putExtra(EXTRA_DIFFICULTY, difficulty);
         startActivityForResult(intent, REQUEST_CODE_QUIZ);
+
+        /**
+         * Here you can code for adding category or question from user-end
+         */
+        // Category or categories list
+        // Question or questions list
+
     }
 
     @Override

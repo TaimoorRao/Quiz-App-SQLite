@@ -82,14 +82,29 @@ public class QuizDbHelper extends SQLiteOpenHelper {
 
     private void fillCategoriesTable() {
         Category category1 = new Category("Programming");
-        addCategory(category1);
+        insertCategory(category1);
         Category category2 = new Category("Geology");
-        addCategory(category2);
+        insertCategory(category2);
         Category category3 = new Category("Math");
-        addCategory(category3);
+        insertCategory(category3);
     }
 
-    private void addCategory(Category category) {
+    /**
+     * These methods are use for adding category or categories list from user side
+     * @param category
+     */
+    public void addCategory(Category category) {
+        db = getWritableDatabase();
+        insertCategory(category);
+    }
+    public void addCategories(List<Category> categories) {
+        db = getWritableDatabase();
+        for (Category category : categories) {
+            insertCategory(category);
+        }
+    }
+
+    private void insertCategory(Category category) {
         ContentValues cv = new ContentValues();
         cv.put(CategoriesTable.COLUMN_NAME, category.getName());
         db.insert(CategoriesTable.TABLE_NAME, null, cv);
@@ -114,15 +129,30 @@ public class QuizDbHelper extends SQLiteOpenHelper {
         Question q6 = new Question("Non existing, Medium: B is correct",
                 "A", "B", "C", 2,
                 Question.DIFFICULTY_MEDIUM, 5);
-        addQuestion(q1);
-        addQuestion(q2);
-        addQuestion(q3);
-        addQuestion(q4);
-        addQuestion(q5);
-        addQuestion(q6);
+        insertQuestion(q1);
+        insertQuestion(q2);
+        insertQuestion(q3);
+        insertQuestion(q4);
+        insertQuestion(q5);
+        insertQuestion(q6);
     }
 
-    private void addQuestion(Question q) {
+    /**
+     * These methods are use for adding question or questions list from user side
+     * @param question
+     */
+    public void addQuestion(Question question) {
+        db = getWritableDatabase();
+        insertQuestion(question);
+    }
+    public void addQuestions(List<Question> questions) {
+        db = getWritableDatabase();
+        for (Question question : questions) {
+            insertQuestion(question);
+        }
+    }
+
+    private void insertQuestion(Question q) {
         ContentValues cv = new ContentValues();
         cv.put(QuestionsTable.COLUMN_QUESTION, q.getQuestion());
         cv.put(QuestionsTable.COLUMN_OPTION1, q.getOption1());
