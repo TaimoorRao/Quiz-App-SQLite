@@ -1,5 +1,6 @@
 package com.example.task17;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -14,13 +15,19 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 
 public class QuizActivity extends AppCompatActivity {
     public static final String EXTRA_SCORE = "extraScore";
     private static final long COUNTDOWN_IN_MILLIS = 30000;
+
+    private static final String KEY_SCORE = "keyScore";
+    private static final String KEY_QUESTION_COUNT = "keyQuestionCount";
+    private static final String KEY_MILLIS_LEFT = "keyMillisLeft";
+    private static final String KEY_ANSWERED = "keyAnswered";
+    private static final String KEY_QUESTION_LIST = "keyQuestionList";
 
     private TextView textViewQuestion;
     private TextView textViewScore;
@@ -38,7 +45,7 @@ public class QuizActivity extends AppCompatActivity {
     private CountDownTimer countDownTimer;
     private long timeLeftInMillis;
 
-    private List<Question> questionList;
+    private ArrayList<Question> questionList;
     private int questionCounter;
     private int questionCountTotal;
     private Question currentQuestion;
@@ -66,11 +73,31 @@ public class QuizActivity extends AppCompatActivity {
         textColorDefaultRb = rb1.getTextColors();
         textColorDefaultCd = textViewCountDown.getTextColors();
 
-        QuizDbHelper dbHelper = new QuizDbHelper(this);
-        questionList = dbHelper.getAllQuestions();
-        questionCountTotal = questionList.size();
-        Collections.shuffle(questionList);
-        showNextQuestion();
+        if (savedInstanceState == null) {
+            QuizDbHelper dbHelper = new QuizDbHelper(this);
+            questionList = dbHelper.getAllQuestions();
+            questionCountTotal = questionList.size();
+            Collections.shuffle(questionList);
+
+            showNextQuestion();
+        } else {
+            questionList = savedInstanceState.getParcelableArrayList(KEY_QUESTION_LIST);
+            questionCountTotal = questionList.size();
+            questionCounter = savedInstanceState.getInt(KEY_QUESTION_COUNT);
+            currentQuestion = questionList.get(questionCounter - 1);
+            score = savedInstanceState.getInt(KEY_SCORE);
+            timeLeftInMillis = savedInstanceState.getLong(KEY_MILLIS_LEFT);
+            answered = savedInstanceState.getBoolean(KEY_ANSWERED);
+
+            if (!answered){
+                startCountDown();
+            } else {
+                updateCountDownText();
+                showSolution();
+            }
+        }
+
+
         buttonConfirmNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,6 +113,7 @@ public class QuizActivity extends AppCompatActivity {
             }
         });
     }
+
     private void showNextQuestion() {
         rb1.setTextColor(textColorDefaultRb);
         rb2.setTextColor(textColorDefaultRb);
@@ -116,6 +144,7 @@ public class QuizActivity extends AppCompatActivity {
                 timeLeftInMillis = millisUntilFinished;
                 updateCountDownText();
             }
+
             @Override
             public void onFinish() {
                 timeLeftInMillis = 0;
@@ -147,6 +176,7 @@ public class QuizActivity extends AppCompatActivity {
         }
         showSolution();
     }
+
     private void showSolution() {
         rb1.setTextColor(Color.RED);
         rb2.setTextColor(Color.RED);
@@ -171,6 +201,7 @@ public class QuizActivity extends AppCompatActivity {
             buttonConfirmNext.setText("Finish");
         }
     }
+
     private void finishQuiz() {
         Intent resultIntent = new Intent();
         resultIntent.putExtra(EXTRA_SCORE, score);
@@ -194,5 +225,15 @@ public class QuizActivity extends AppCompatActivity {
         if (countDownTimer != null) {
             countDownTimer.cancel();
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_SCORE, score);
+        outState.putInt(KEY_QUESTION_COUNT, questionCounter);
+        outState.putLong(KEY_MILLIS_LEFT, timeLeftInMillis);
+        outState.putBoolean(KEY_ANSWERED, answered);
+        outState.putParcelableArrayList(KEY_QUESTION_LIST, questionList);
     }
 }
