@@ -24,6 +24,14 @@
         android:freezesText="true"
         android:text="Question: 1/x"
         android:textColor="@android:color/black" />
+    <TextView
+        android:id="@+id/text_view_difficulty_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_view_question_count"
+        android:freezesText="true"
+        android:text="Difficulty: x"
+        android:textColor="@android:color/black" />
 
     <TextView
         android:id="@+id/text_view_countdown"
