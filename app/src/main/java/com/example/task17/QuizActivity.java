@@ -2,6 +2,7 @@ package com.example.task17;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -14,6 +15,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.task17.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,9 +61,12 @@ public class QuizActivity extends AppCompatActivity {
 
     private long backPressedTime;
 
+    ActivityMainBinding bindingQuiz;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // bindingQuiz = DataBindingUtil.setContentView(this, R.layout.activity_quiz);
         setContentView(R.layout.activity_quiz);
 
         textViewQuestion = findViewById(R.id.text_view_question);

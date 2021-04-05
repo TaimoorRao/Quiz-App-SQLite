@@ -1,6 +1,7 @@
 package com.example.task17;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -8,11 +9,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
-import android.widget.TextView;
+//import android.widget.Button;
+//import android.widget.Spinner;
+//import android.widget.TextView;
 
-import java.util.Calendar;
+import com.example.task17.databinding.ActivityMainBinding;
+
+//import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,26 +27,28 @@ public class MainActivity extends AppCompatActivity {
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String KEY_HIGHSCORE = "keyHighScore";
 
-    private TextView textViewHighScore;
-    private Spinner spinnerDifficulty;
-    private Spinner spinnerCategory;
+//    private TextView textViewHighScore;
+//    private Spinner spinnerDifficulty;
+//    private Spinner spinnerCategory;
     private int highScore;
+
+    private ActivityMainBinding bindingMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        bindingMain = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        textViewHighScore = findViewById(R.id.text_view_highscore);
-        spinnerDifficulty = findViewById(R.id.spinner_difficulty);
-        spinnerCategory = findViewById(R.id.spinner_category);
+//        textViewHighScore = findViewById(R.id.text_view_highscore);
+//        spinnerDifficulty = findViewById(R.id.spinner_difficulty);
+//        spinnerCategory = findViewById(R.id.spinner_category);
 
         loadCategories();
         loadDifficultyLevels();
         loadHighScore();
 
-        Button buttonStartQuiz = findViewById(R.id.button_start_quiz);
-        buttonStartQuiz.setOnClickListener(new View.OnClickListener() {
+//        Button buttonStartQuiz = findViewById(R.id.button_start_quiz);
+        bindingMain.buttonStartQuiz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startQuiz();
@@ -52,10 +57,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startQuiz() {
-        Category selectedCategory = (Category) spinnerCategory.getSelectedItem();
+        Category selectedCategory = (Category) bindingMain.spinnerCategory.getSelectedItem();
         int categoryID = selectedCategory.getId();
         String categoryName = selectedCategory.getName();
-        String difficulty = spinnerDifficulty.getSelectedItem().toString();
+        String difficulty = bindingMain.spinnerDifficulty.getSelectedItem().toString();
 
         Intent intent = new Intent(MainActivity.this, QuizActivity.class);
         intent.putExtra(EXTRA_CATEGORY_ID, categoryID);
@@ -63,9 +68,8 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_DIFFICULTY, difficulty);
         startActivityForResult(intent, REQUEST_CODE_QUIZ);
 
-        /**
-         * Here you can code for adding category or question from user-end
-         */
+        // Here you can code for adding category or question from user-end
+
         // Category or categories list
         // Question or questions list
 
@@ -94,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<Category> adapterCategory = new ArrayAdapter<Category>(this,
                 android.R.layout.simple_spinner_item, categories);
         adapterCategory.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCategory.setAdapter(adapterCategory);
+        bindingMain.spinnerCategory.setAdapter(adapterCategory);
     }
 
     /**
@@ -102,23 +106,24 @@ public class MainActivity extends AppCompatActivity {
      */
     private void loadDifficultyLevels() {
         String[] difficultyLevels = Question.getAllDifficultyLevels();
+
         ArrayAdapter<String> adapterDifficulty = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, difficultyLevels);
         adapterDifficulty.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerDifficulty.setAdapter(adapterDifficulty);
+        bindingMain.spinnerDifficulty.setAdapter(adapterDifficulty);
     }
 
     @SuppressLint("SetTextI18n")
     private void loadHighScore() {
         SharedPreferences prefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         highScore = prefs.getInt(KEY_HIGHSCORE, 0);
-        textViewHighScore.setText("High Score: " + highScore);
+        bindingMain.textViewHighscore.setText("High Score: " + highScore);
     }
 
     @SuppressLint("SetTextI18n")
     private void updateHighScore(int highScoreNew) {
         highScore = highScoreNew;
-        textViewHighScore.setText("High Score: " + highScore);
+        bindingMain.textViewHighscore.setText("High Score: " + highScore);
         SharedPreferences prefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt(KEY_HIGHSCORE, highScore);
