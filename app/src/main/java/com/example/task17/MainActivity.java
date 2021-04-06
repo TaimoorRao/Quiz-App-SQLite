@@ -1,21 +1,16 @@
 package com.example.task17;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ArrayAdapter;
-//import android.widget.Button;
-//import android.widget.Spinner;
-//import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import com.example.task17.databinding.ActivityMainBinding;
 
-//import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,9 +22,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String KEY_HIGHSCORE = "keyHighScore";
 
-//    private TextView textViewHighScore;
-//    private Spinner spinnerDifficulty;
-//    private Spinner spinnerCategory;
     private int highScore;
 
     private ActivityMainBinding bindingMain;
@@ -38,22 +30,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bindingMain = DataBindingUtil.setContentView(this, R.layout.activity_main);
-
-//        textViewHighScore = findViewById(R.id.text_view_highscore);
-//        spinnerDifficulty = findViewById(R.id.spinner_difficulty);
-//        spinnerCategory = findViewById(R.id.spinner_category);
+        setMainLayoutValues(bindingMain);
 
         loadCategories();
         loadDifficultyLevels();
         loadHighScore();
 
-//        Button buttonStartQuiz = findViewById(R.id.button_start_quiz);
-        bindingMain.buttonStartQuiz.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startQuiz();
-            }
-        });
+        bindingMain.buttonStartQuiz.setOnClickListener(v -> startQuiz());
+    }
+
+    private void setMainLayoutValues(ActivityMainBinding bindingMain) {
+        bindingMain.setMyQuiz("My Quiz");
+        bindingMain.setHighscore("High Score: 0");
+        bindingMain.setBtnStart("Start Quiz");
     }
 
     private void startQuiz() {
@@ -117,13 +106,13 @@ public class MainActivity extends AppCompatActivity {
     private void loadHighScore() {
         SharedPreferences prefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         highScore = prefs.getInt(KEY_HIGHSCORE, 0);
-        bindingMain.textViewHighscore.setText("High Score: " + highScore);
+        bindingMain.setHighscore("High Score: " + highScore);
     }
 
     @SuppressLint("SetTextI18n")
     private void updateHighScore(int highScoreNew) {
         highScore = highScoreNew;
-        bindingMain.textViewHighscore.setText("High Score: " + highScore);
+        bindingMain.setHighscore("High Score: " + highScore);
         SharedPreferences prefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt(KEY_HIGHSCORE, highScore);

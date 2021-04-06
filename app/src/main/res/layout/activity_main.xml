@@ -2,7 +2,17 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <data>
+        <variable
+            name="my_quiz"
+            type="String" />
+        <variable
+            name="highscore"
+            type="String" />
+        <variable
+            name="btn_Start"
+            type="String" />
+    </data>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
-            android:text="My Quiz"
+            android:text="@{my_quiz}"
             android:textColor="@android:color/black"
             android:textSize="35sp" />
 
@@ -26,7 +36,7 @@
             android:layout_above="@id/button_start_quiz"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="32dp"
-            android:text="High Score: 0"
+            android:text="@{highscore}"
             android:textSize="20sp" />
 
         <Button
@@ -34,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Start Quiz" />
+            android:text="@{btn_Start}" />
 
         <Spinner
             android:id="@+id/spinner_difficulty"
